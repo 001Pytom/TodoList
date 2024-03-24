@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import TodoItem from "./TodoItem";
+import InputArea from "./inputArea";
 
 function App() {
   const [inputText, setInputText] = useState("");
@@ -10,24 +12,39 @@ function App() {
   }
 
   function displayTodo() {
-    setItems((prevItems) => [...prevItems, inputText]  );
+    setItems((prevItems) => [...prevItems, inputText]);
     setInputText("");
+  }
+
+  function deletItem(id) {
+    setItems((prevItems) => {
+      return prevItems.filter((item, index) => {
+        return index !== id;
+      });
+    });
   }
   return (
     <div className="container">
       <div className="heading">
         <h1>To-Do List</h1>
       </div>
-      <div className="form">
-        <input type="text" onChange={getInputText} value={inputText} />
-        <button onClick={displayTodo}>
-          <span>Add </span>
-        </button>
-      </div>
+      <InputArea
+        getInputTextFunc={getInputText}
+        inputTextValue={inputText}
+        displayTodoFunc={displayTodo}
+      />
+
       <div>
         <ul>
-          {items.map((item) => {
-            return <li>{item}</li>;
+          {items.map((item, index) => {
+            return (
+              <TodoItem
+                key={index}
+                id={index}
+                text={item}
+                onchecked={deletItem}
+              />
+            );
           })}
         </ul>
       </div>
